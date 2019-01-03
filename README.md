@@ -22,9 +22,9 @@ export const query = graphql`
 }
 `;
 
-export const Demo = ({ data, graphql }) => (
+export const Demo = withGraphql(({ data, graphql }) => (
   <button onClick={graphql('swapi', { query })}>Reload</button>
-);
+));
 ```
 
 Props:

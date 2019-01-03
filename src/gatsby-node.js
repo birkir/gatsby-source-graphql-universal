@@ -1,4 +1,4 @@
-const { sourceNodes } = require('gatsby-source-graphql');
+const { sourceNodes } = require('gatsby-source-graphql/gatsby-node');
 
 exports.sourceNodes = sourceNodes;
 

@@ -1,0 +1,97 @@
+From 5415fd3a335fedf0fd6dfb8b05a16d6c7016bf63 Mon Sep 17 00:00:00 2001
+From: Birkir Gudjonsson <birkir.gudjonsson@gmail.com>
+Date: Thu, 3 Jan 2019 00:56:20 -0500
+Subject: Change babel-plugin-remove-graphql-queries
+
+---
+ .../src/index.js                              | 39 ++++++++++++++++---
+ 1 file changed, 33 insertions(+), 6 deletions(-)
+
+diff --git a/packages/babel-plugin-remove-graphql-queries/src/index.js b/packages/babel-plugin-remove-graphql-queries/src/index.js
+index fd771c8..f94dd6d 100644
+--- a/packages/babel-plugin-remove-graphql-queries/src/index.js
++++ b/packages/babel-plugin-remove-graphql-queries/src/index.js
+@@ -1,11 +1,34 @@
+ /*  eslint-disable new-cap */
+ const graphql = require(`gatsby/graphql`)
+-const murmurhash = require(`./murmur`)
++const murmurhash = require(`babel-plugin-remove-graphql-queries/murmur`)
+ const nodePath = require(`path`)
+ 
+ const isGlobalIdentifier = tag =>
+   tag.isIdentifier({ name: `graphql` }) && tag.scope.hasGlobal(`graphql`)
+ 
++function getGraphqlExpr(t, queryHash, source) {
++  return t.objectExpression([
++    t.objectProperty(
++      t.identifier('id'),
++      t.stringLiteral(queryHash)
++    ),
++    t.objectProperty(
++      t.identifier('source'),
++      t.stringLiteral(source)
++    ),
++    t.objectMethod(
++      'method',
++      t.identifier('toString'),
++      [],
++      t.blockStatement([
++        t.returnStatement(
++          t.memberExpression(t.identifier('this'), t.identifier('id'))
++        )
++      ])
++    )
++  ])
++}
++
+ function getTagImport(tag) {
+   const name = tag.node.name
+   const binding = tag.scope.getBinding(name)
+@@ -77,11 +100,11 @@ function removeImport(tag) {
+   }
+   if (importPath.isObjectProperty()) {
+     if (parent.node.properties.length === 1)
+-      importPath.findParent(p => p.isVariableDeclaration())?.remove()
++      importPath.findParent(p => p.isVariableDeclaration()).remove()
+     else importPath.remove()
+   }
+   if (importPath.isIdentifier()) {
+-    importPath.findParent(p => p.isVariableDeclaration())?.remove()
++    importPath.findParent(p => p.isVariableDeclaration()).remove()
+   }
+ }
+ 
+@@ -181,7 +204,9 @@ export default function({ types: t }) {
+           }
+ 
+           // Replace the query with the hash of the query.
+-          templatePath.replaceWith(t.StringLiteral(queryHash))
++          templatePath.replaceWith(
++            getGraphqlExpr(t, queryHash, text)
++          )
+ 
+           // modify StaticQuery elements and import data only if query is inside StaticQuery
+           templatePath.parentPath.parentPath.parentPath.traverse(
+@@ -244,7 +269,7 @@ export default function({ types: t }) {
+         path.traverse({
+           // Run it again to remove non-staticquery versions
+           TaggedTemplateExpression(path2, state) {
+-            const { ast, hash, isGlobal } = getGraphQLTag(path2)
++            const { ast, text, hash, isGlobal } = getGraphQLTag(path2)
+ 
+             if (!ast) return null
+ 
+@@ -258,7 +283,9 @@ export default function({ types: t }) {
+             }
+ 
+             // Replace the query with the hash of the query.
+-            path2.replaceWith(t.StringLiteral(queryHash))
++            path2.replaceWith(
++              getGraphqlExpr(t, queryHash, text)
++            )
+             return null
+           },
+         })
+-- 
+2.17.2 (Apple Git-113)
+

@@ -1,14 +1,14 @@
 # gatsby-source-graphql-universal
 
-# Universal
-
 > NOTE: This is an universal version of the official `gatsby-source-graphql` source plugin. It modifies the babel plugins to skip the removal of graphql queries so they can be re-used.
 
 ## How to use
 
-Add the plugin as usual (read below)
+The plugin provides higher order component as well as direct manipulation tools for custom operations
 
-Very simple usage:
+### Higher-Order Component
+
+There is a higher order component to wrap components to get access to graphql queries in the browser.
 
 ```jsx
 import { graphql } from 'gatsby';
@@ -22,24 +22,81 @@ export const query = graphql`
 }
 `;
 
-export const Demo = withGraphql(({ data, graphql }) => (
-  <button onClick={graphql('swapi', { query })}>Reload</button>
-));
+export const Demo = withGraphql(
+  ({ data, graphql }) => {
+    const onClick = () => graphql('swapi', {
+      query,
+      fetchPolicy: 'network-only',
+      variables: { page: 3 }
+    });
+
+    return (
+      <button onClick={onClick}>Reload</button>
+    );
+  }
+);
 ```
 
-Props:
-**`this.props.data`**: Same as data from gatsby, but when `graphql` is called, will be overwritten with new data if `composeData` prop is set to true (default: true).
+#### Props
 
-```ts
-this.props.graphql(fieldName: string, { query: GraphQL, composeData: Boolean, ...QueryOptions }):
+ - **`data`**: Same as data from gatsby, but when `graphql()` (below) is called, it will be overwritten with new data when `composeData` prop is set to true.
+
+ - **`graphql(fieldName, options): Promise`**
+   - **`fieldName`**: the same fieldName as provided in gatsby-config.js
+   - **`options.query`**: the query variable defined above the component
+   - **`options.composeData`**: _(default: true)_  will overwrite component gatsby data with composed data from the browser when true
+   - **`...options`** optional parameters to pass to `ApolloClient.query` (sets fetchPolicy to 'network-only' by default)
+
+
+### getIsolatedQuery
+
+The following code will now result in an object that has the original graphql query source accessible where you are free to do anything with it.
+
+```js
+const query = graphql\`...\`;
 ```
 
- - **`fieldName`** is the same as provided in gatsby-config.js.
- - **`query`** is the query variable defined above the component
- - **`QueryOptions`** is optional parameters to pass to `ApolloClient.query`.
+```json
+{
+  "id": "1234567",
+  "source": "{ \"swapi\": { ... } }"
+}
+```
+
+You can get isolated query to your graphql endpoint by re-using the composing function:
+
+```js
+import { graphql } from 'gatsby';
+import { getIsolatedQuery } from 'gatsby-source-graphql-universal';
+
+const query = gatsby`
+{
+  siteMetadata {
+    title
+  }
+  swapi {
+    allPersons {
+      id
+    }
+  }
+}
+`;
+
+const onlySwapi = getIsolatedQuery(query, 'swapi', 'SWAPI');
+
+// Output:
+//
+// {
+//  allPersons {
+//    id
+//  }
+// }
+```
+
 
 ---
 
+### gatsby-source-graphql (previous documentation)
 
 Plugin for connecting arbitrary GraphQL APIs to Gatsby GraphQL. Remote schemas are stitched together by adding a type that wraps the remote schema 
 Query type and putting it under field of Gatsby GraphQL Query.

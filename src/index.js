@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import ApolloClient from 'apollo-boost';
-import * as traverse from 'traverse';
+import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
 
 const options = new Map();

@@ -1,10 +1,52 @@
 # gatsby-source-graphql-universal
 
+# Universal
+
+> NOTE: This is an universal version of the official `gatsby-source-graphql` source plugin. It modifies the babel plugins to skip the removal of graphql queries so they can be re-used.
+
+## How to use
+
+Add the plugin as usual (read below)
+
+Very simple usage:
+
+```jsx
+import { graphql } from 'gatsby';
+import { withGraphql } from 'gatsby-source-graphql-universal';
+
+export const query = graphql`
+{
+  swapi {
+    ...
+  }
+}
+`;
+
+export const Demo = ({ data, graphql }) => (
+  <button onClick={graphql('swapi', { query })}>Reload</button>
+);
+```
+
+Props:
+**`this.props.data`**: Same as data from gatsby, but when `graphql` is called, will be overwritten with new data if `composeData` prop is set to true (default: true).
+
+```ts
+this.props.graphql(fieldName: string, { query: GraphQL, composeData: Boolean, ...QueryOptions }):
+```
+
+ - **`fieldName`** is the same as provided in gatsby-config.js.
+ - **`query`** is the query variable defined above the component
+ - **`QueryOptions`** is optional parameters to pass to `ApolloClient.query`.
+
+---
+
+
 Plugin for connecting arbitrary GraphQL APIs to Gatsby GraphQL. Remote schemas are stitched together by adding a type that wraps the remote schema 
 Query type and putting it under field of Gatsby GraphQL Query.
 
 - [Example website](https://using-gatsby-source-graphql.netlify.com/)
 - [Example website source](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-gatsby-source-graphql)
+
 
 ## Install
 

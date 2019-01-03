@@ -82,7 +82,7 @@ const query = gatsby`
 }
 `;
 
-const onlySwapi = getIsolatedQuery(query, 'swapi', 'SWAPI');
+const onlySwapi = getIsolatedQuery(query.source, 'swapi', 'SWAPI');
 
 // Output:
 //

@@ -5,6 +5,7 @@ module.exports = {
     author: `@gatsbyjs`,
   },
   plugins: [
+    `gatsby-plugin-typescript`,
     {
       resolve: "gatsby-source-graphql-universal",
       options: {

@@ -4,6 +4,13 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 import { withGraphql } from 'gatsby-source-graphql-universal';
 
+export const planetFragment = graphql`
+  fragment Planet on SWAPI_Planet {
+    id
+    name
+  }
+`;
+
 export const query = graphql`
   query homepage($skip: Int, $limit: Int = 2) {
     site {
@@ -16,10 +23,7 @@ export const query = graphql`
         id
         title
         planets {
-          ... on SWAPI_Planet {
-            id
-            name
-          }
+          ...Planet
         }
       }
     }
@@ -37,8 +41,10 @@ class IndexPage extends React.Component {
   update = async () => {
     const { skip, limit } = this.state;
     this.setState({ loading: true });
+
     await this.props.graphql('swapi', {
       query,
+      fragments: [planetFragment],
       variables: {
         skip,
         limit,

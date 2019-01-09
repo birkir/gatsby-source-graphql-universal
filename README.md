@@ -6,9 +6,8 @@
 
 The plugin provides higher order component as well as direct manipulation tools for custom operations
 
-## Problems
+[See TypeScript definitions for more details](/index.d.ts)
 
-Does not seem to work with `gatsby-plugin-typescript`. Will investigate.
 
 ### Higher-Order Component
 
@@ -17,6 +16,13 @@ There is a higher order component to wrap components to get access to graphql qu
 ```jsx
 import { graphql } from 'gatsby';
 import { withGraphql } from 'gatsby-source-graphql-universal';
+
+export const fooFragment = graphql`
+  fragment Planet on ...SWAPI_Planet {
+    id
+    title
+  }
+`
 
 export const query = graphql`
 {
@@ -30,6 +36,7 @@ export const Demo = withGraphql(
   ({ data, graphql }) => {
     const onClick = () => graphql('swapi', {
       query,
+      fragments: [fooFragment],
       fetchPolicy: 'network-only',
       variables: { page: 3 }
     });
@@ -48,6 +55,7 @@ export const Demo = withGraphql(
  - **`graphql(fieldName, options): Promise`**
    - **`fieldName`**: the same fieldName as provided in gatsby-config.js
    - **`options.query`**: the query variable defined above the component
+   - **`options.fragments`**: list of fragments to inject into the query
    - **`options.composeData`**: _(default: true)_  will overwrite component gatsby data with composed data from the browser when true
    - **`...options`** optional parameters to pass to `ApolloClient.query` (sets fetchPolicy to 'network-only' by default)
 
@@ -74,13 +82,15 @@ import { graphql } from 'gatsby';
 import { getIsolatedQuery } from 'gatsby-source-graphql-universal';
 
 const query = gatsby`
-{
+query {
   siteMetadata {
     title
   }
   swapi {
     allPersons {
-      id
+      ... on SWAPI_Person {
+        id
+      }
     }
   }
 }
@@ -90,13 +100,18 @@ const onlySwapi = getIsolatedQuery(query.source, 'swapi', 'SWAPI');
 
 // Output:
 //
-// {
-//  allPersons {
-//    id
-//  }
+// query {
+//   allPersons {
+//     ... on Person {
+//       id
+//     }
+//   }
 // }
 ```
 
+
+
+---
 
 ---
 

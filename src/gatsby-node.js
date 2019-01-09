@@ -5,23 +5,28 @@ exports.sourceNodes = sourceNodes;
 exports.onCreateWebpackConfig = ({ actions, getConfig }) => {
   const config = getConfig()
 
-  const traverseRule = rule => {
-    if (rule.oneOf && Array.isArray(rule.oneOf)) {
-      return { ...rule, oneOf: rule.oneOf.map(traverseRule) }
+  const replaceRule = ruleUse => {
+    if (ruleUse.loader && ruleUse.loader.indexOf(`gatsby/dist/utils/babel-loader.js`) >= 0) {
+      ruleUse.loader = require.resolve(`gatsby-source-graphql-universal/babel-loader.js`);
     }
-
-    if (rule.use && Array.isArray(rule.use)) {
-      rule.use.forEach(ruleUse => {
-        if (ruleUse.loader && ruleUse.loader.indexOf(`gatsby/dist/utils/babel-loader.js`) >= 0) {
-          ruleUse.loader = require.resolve(`gatsby-source-graphql-universal/babel-loader.js`)
-        }
-      })
-    }
-
-    return rule
   }
 
-  config.module.rules = config.module.rules.map(traverseRule)
+  const traverseRule = rule => {
+    if (rule.oneOf && Array.isArray(rule.oneOf)) {
+      rule.oneOf.forEach(traverseRule);
+    }
+
+    if (rule.use) {
+      if (Array.isArray(rule.use)) {
+        rule.use.forEach(replaceRule);
+      } else {
+        replaceRule(rule.use);
+      }
+    }
+
+  };
+
+  config.module.rules.forEach(traverseRule)
 
   actions.replaceWebpackConfig(config)
 };

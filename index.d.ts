@@ -14,6 +14,12 @@ interface QueryParameters extends QueryOptions {
   client?: ApolloClient<any>;
   
   /**
+   * List of additional fragments to include in query (optional)
+   * @default []
+   */
+  fragments: IsolatedQueryInput[]; 
+
+  /**
    * If enabled, the result of the query will automatically
    * merge with last data props.
    * @default true

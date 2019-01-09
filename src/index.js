@@ -3,6 +3,17 @@ import gql from 'graphql-tag';
 import ApolloClient from 'apollo-boost';
 import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
+import { StaticQuery } from 'gatsby';
+import PropTypes from 'prop-types';
+
+// Allow string OR patched queries format
+StaticQuery.propTypes.query = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    source: PropTypes.string.isRequired,
+  })
+]).isRequired;
 
 const options = new Map();
 
@@ -35,29 +46,32 @@ export const setOptions = (name, opts) => {
   options.set(name, opts);
 }
 
-export const getIsolatedQuery = (querySource, fieldName, typeName) => {
-  let query;
-  if (querySource.definitions) {
-    query = querySource;
-  } else if (typeof querySource === 'string') {
-    query = gql(querySource);
-  } else if (typeof querySource === 'object' && querySource.source) {
-    query = gql(querySource.source);
+const getQuery = query => {
+  if (typeof query === 'object' && query.definitions) {
+    return query;
+  } else if (typeof query === 'string') {
+    return gql(query);
+  } else if (typeof query === 'object' && query.source) {
+    return gql(query.source);
   } else {
-    throw new Error('Could not parse query');
+    throw new Error('Could not parse query: ' + query);
   }
+}
 
+export const getIsolatedQuery = (querySource, fieldName, typeName) => {
+
+  const query = getQuery(querySource);
   const updatedQuery = cloneDeep(query);
 
   const updatedRoot = updatedQuery.definitions[0].selectionSet.selections
   .find(selection => selection.name && selection.name.kind === 'Name' && selection.name.value === fieldName);
 
-  if (!updatedRoot) {
+  if (updatedRoot) {
+    updatedQuery.definitions[0].selectionSet.selections = updatedRoot.selectionSet.selections;
+  } else if (fieldName) {
     console.warn('Failed to update query root');
     return;
   }
-
-  updatedQuery.definitions[0].selectionSet.selections = updatedRoot.selectionSet.selections;
 
   traverse(updatedQuery).forEach(function (x) {
     if (this.isLeaf && this.parent && this.parent.key === 'name') {
@@ -79,7 +93,7 @@ export const withGraphql = WrappedComponent => {
       data: this.props.data,
     }
 
-    graphql = (fieldName, { query, client, composeData = true, ...queryProps }) => {
+    graphql = (fieldName, { query, client, fragments = [], composeData = true, ...queryProps }) => {
       // Get options for graphql source plugin
       const options = getOptions(fieldName);
 
@@ -95,40 +109,35 @@ export const withGraphql = WrappedComponent => {
       const { typeName } = options;
       const apolloClient = client || options.client;
 
-      if (query && query.source) {
-        const updatedQuery = getIsolatedQuery(query, fieldName, typeName);
-        
-        const rootValue = (this.state.data && this.state.data[fieldName]) || {};
+      const updatedQuery = getIsolatedQuery(query, fieldName, typeName);
+      
+      updatedQuery.definitions = updatedQuery.definitions.concat(
+        ...fragments.map(fragment => getIsolatedQuery(fragment, null, typeName).definitions)
+      );
 
-        const res = apolloClient.query({
-          query: updatedQuery,
-          fetchPolicy: 'network-only',
-          ...queryProps
-        });
+      const rootValue = (this.state.data && this.state.data[fieldName]) || {};
 
-        if (composeData) {
-          res.then(res => {
-            this.setState({
-              data: {
-                ...this.state.data,
-                [fieldName]: {
-                  ...rootValue,
-                  ...res.data,
-                },
+      const res = apolloClient.query({
+        query: updatedQuery,
+        fetchPolicy: 'network-only',
+        ...queryProps
+      });
+
+      if (composeData) {
+        res.then(res => {
+          this.setState({
+            data: {
+              ...this.state.data,
+              [fieldName]: {
+                ...rootValue,
+                ...res.data,
               },
-            });
+            },
           });
-        }
-
-        return res;
-
-      } else if (query && query.kind && query.kind === 'Document') {
-        return client.query({
-          query,
-          fetchPolicy: 'network-only',
-          ...queryProps
         });
       }
+
+      return res;
     }
 
     render() {

@@ -96,7 +96,7 @@ query {
 }
 `;
 
-const onlySwapi = getIsolatedQuery(query.source, 'swapi', 'SWAPI');
+const onlySwapi = getIsolatedQuery(query, 'swapi', 'SWAPI');
 
 // Output:
 //

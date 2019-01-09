@@ -34,7 +34,18 @@ export const setOptions = (name, opts) => {
   options.set(name, opts);
 }
 
-export const getIsolatedQuery = (query, fieldName, typeName) => {
+export const getIsolatedQuery = (querySource, fieldName, typeName) => {
+  let query;
+  if (querySource.definitions) {
+    query = querySource;
+  } else if (typeof querySource === 'string') {
+    query = gql(querySource);
+  } else if (typeof querySource === 'object' && querySource.source) {
+    query = gql(querySource.source);
+  } else {
+    throw new Error('Could not parse query');
+  }
+
   const updatedQuery = cloneDeep(query);
 
   const updatedRoot = updatedQuery.definitions[0].selectionSet.selections
@@ -67,11 +78,11 @@ export const withGraphql = WrappedComponent => {
       data: this.props.data,
     }
 
-    graphql = (fieldName, { query, composeData = true, ...queryProps }) => {
+    graphql = (fieldName, { query, client, composeData = true, ...queryProps }) => {
       // Get options for graphql source plugin
       const options = getOptions(fieldName);
 
-      if (!options || !options.client) {
+      if (!client && (!options || !options.client)) {
         if (typeof window === 'undefined') {
           console.warn('GraphQL Universal: Options cannot be passed to plugin on server');
         } else {
@@ -80,14 +91,15 @@ export const withGraphql = WrappedComponent => {
         return;
       }
 
-      const { client, typeName } = options;
+      const { typeName } = options;
+      const apolloClient = client || options.client;
 
       if (query && query.source) {
-        const updatedQuery = getIsolatedQuery(gql(query.source), fieldName, typeName);
+        const updatedQuery = getIsolatedQuery(query, fieldName, typeName);
         
         const rootValue = (this.state.data && this.state.data[fieldName]) || {};
 
-        const res = client.query({
+        const res = apolloClient.query({
           query: updatedQuery,
           fetchPolicy: 'network-only',
           ...queryProps

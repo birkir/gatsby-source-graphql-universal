@@ -28,7 +28,8 @@ export const setOptions = (name, opts) => {
   }
   if (!opts.client) {
     opts.client = new ApolloClient({
-      uri: opts.url
+      uri: opts.url,
+      headers: opts.headers,
     });
   }
   options.set(name, opts);

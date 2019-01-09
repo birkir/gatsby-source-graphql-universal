@@ -6,6 +6,10 @@
 
 The plugin provides higher order component as well as direct manipulation tools for custom operations
 
+## Problems
+
+Does not seem to work with `gatsby-plugin-typescript`. Will investigate.
+
 ### Higher-Order Component
 
 There is a higher order component to wrap components to get access to graphql queries in the browser.

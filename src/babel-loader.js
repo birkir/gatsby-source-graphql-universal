@@ -4,9 +4,23 @@ const {
   getCustomOptions,
   mergeConfigItemOptions,
 } = require(`gatsby/dist/utils/babel-loader-helpers`)
-
 const { prepareOptions } = require(`./utils`);
 
+/**
+ * Gatsby's custom loader for webpack & babel
+ *
+ * Gatsby allows sites to either use our Babel setup (the default)
+ * or to add a .babelrc to take control.
+ *
+ * Our default setup is defined in the fallbackPlugins/fallbackPresets arrays
+ * below.
+ *
+ * After using either the fallback or user supplied setup, we add on a handful
+ * of required plugins and finally merge in any presets/plugins supplied
+ * by Gatsby plugins.
+ *
+ * You can find documentation for the custom loader here: https://babeljs.io/docs/en/next/babel-core.html#loadpartialconfig
+ */
 module.exports = babelLoader.custom(babel => {
   const toReturn = {
     // Passed the loader options.

@@ -1,14 +1,15 @@
 {
   "name": "gatsby-source-graphql-universal",
   "description": "Gatsby plugin which adds a third-party GraphQL API to Gatsby GraphQL with client side execution",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
   "bugs": {
     "url": "https://github.com/birkir/gatsby-source-graphql-universal/issues"
   },
   "main": "index.js",
   "files": [
-    "*.js"
+    "*.js",
+    "index.d.ts"
   ],
   "dependencies": {
     "@babel/runtime": "^7.0.0",

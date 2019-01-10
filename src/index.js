@@ -110,7 +110,7 @@ export const withGraphql = WrappedComponent => {
       const apolloClient = client || options.client;
 
       const updatedQuery = getIsolatedQuery(query, fieldName, typeName);
-      
+
       updatedQuery.definitions = updatedQuery.definitions.concat(
         ...fragments.map(fragment => getIsolatedQuery(fragment, null, typeName).definitions)
       );
@@ -124,7 +124,7 @@ export const withGraphql = WrappedComponent => {
       });
 
       if (composeData) {
-        res.then(res => {
+        return res.then(res => {
           this.setState({
             data: {
               ...this.state.data,
@@ -134,6 +134,7 @@ export const withGraphql = WrappedComponent => {
               },
             },
           });
+          return res;
         });
       }
 

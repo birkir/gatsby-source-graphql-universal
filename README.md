@@ -25,11 +25,11 @@ export const fooFragment = graphql`
 `
 
 export const query = graphql`
-{
-  swapi {
-    ...
+  query {
+    swapi {
+      ...
+    }
   }
-}
 `;
 
 export const Demo = withGraphql(
@@ -82,21 +82,21 @@ import { graphql } from 'gatsby';
 import { getIsolatedQuery } from 'gatsby-source-graphql-universal';
 
 const query = gatsby`
-query {
-  siteMetadata {
-    title
-  }
-  swapi {
-    allPersons {
-      ... on SWAPI_Person {
-        id
+  query {
+    siteMetadata {
+      title
+    }
+    swapi {
+      allPersons {
+        ... on SWAPI_Person {
+          id
+        }
       }
     }
   }
-}
 `;
 
-const onlySwapi = getIsolatedQuery(query.source, 'swapi', 'SWAPI');
+const onlySwapi = getIsolatedQuery(query, 'swapi', 'SWAPI');
 
 // Output:
 //

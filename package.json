@@ -1,7 +1,7 @@
 {
   "name": "gatsby-source-graphql-universal",
   "description": "Gatsby plugin which adds a third-party GraphQL API to Gatsby GraphQL with client side execution",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
   "bugs": {
     "url": "https://github.com/birkir/gatsby-source-graphql-universal/issues"
@@ -20,6 +20,7 @@
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",
     "lodash.clonedeep": "4.5.0",
+    "lodash.get": "^4.4.2",
     "traverse": "^0.6.6"
   },
   "devDependencies": {

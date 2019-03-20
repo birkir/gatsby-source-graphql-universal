@@ -9,8 +9,13 @@ const getRootQuery = (componentPath) => {
   const exported = get(ast, 'program.body', []).filter(
     (n) => n.type === 'ExportNamedDeclaration'
   );
-  if (get(exported, '0.declaration.declarations.0.id.name') === 'query') {
-    const query = get(exported, '0.declaration.declarations.0.init.quasi.quasis.0.value.raw');
+  const exportedQuery = exported.find(exp =>
+    get(exp, 'declaration.declarations.0.id.name') === 'query'
+  );
+
+  if (exportedQuery) {
+    const query = get(exportedQuery, 'declaration.declarations.0.init.quasi.quasis.0.value.raw');
+
     if (query) {
       return query;
     }

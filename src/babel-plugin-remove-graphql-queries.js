@@ -377,7 +377,7 @@ export default function({ types: t }) {
         // Run it again to remove non-staticquery versions
         path.traverse({
           TaggedTemplateExpression(path2, state) {
-            const { ast, hash, isGlobal } = getGraphQLTag(path2)
+            const { ast, hash, text, isGlobal } = getGraphQLTag(path2)
 
             if (!ast) return null
 
@@ -391,7 +391,9 @@ export default function({ types: t }) {
             }
 
             // Replace the query with the hash of the query.
-            path2.replaceWith(t.StringLiteral(queryHash))
+            path2.replaceWith(
+              getGraphqlExpr(t, queryHash, text)
+            )
             return null
           },
         })

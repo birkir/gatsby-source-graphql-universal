@@ -219,7 +219,7 @@ export default function({ types: t }) {
 
               // Add query
               path2.replaceWith(
-                getGraphqlExpr(t, queryHash, text)
+                getGraphqlExpr(t, this.queryHash, this.query)
               )
 
               // Add import

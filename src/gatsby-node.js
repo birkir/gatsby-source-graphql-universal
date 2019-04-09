@@ -6,7 +6,7 @@ const { sourceNodes } = require('gatsby-source-graphql/gatsby-node');
 const getRootQuery = (componentPath) => {
   try {
     const content = fs.readFileSync(componentPath, 'utf-8');
-    const ast = babelParseToAst(content);
+    const ast = babelParseToAst(content, componentPath);
     const exported = get(ast, 'program.body', []).filter(
       (n) => n.type === 'ExportNamedDeclaration'
     );

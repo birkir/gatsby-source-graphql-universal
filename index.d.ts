@@ -35,4 +35,3 @@ export function getOptions(name: string): any;
 export function setOptions(name: string, options: any): void;
 export function getIsolatedQuery(query: IsolatedQueryInput, fieldName: string, typeName: string): DocumentNode
 export function withGraphql<TProps, TResult = any>(WrappedComponent: React.ComponentType<WithGraphQLClient<TProps>>): React.ComponentClass<TProps>;
-export function getRootQuery(componentPath: string): string | null;

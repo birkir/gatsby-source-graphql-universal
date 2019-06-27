@@ -5,6 +5,7 @@ import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
 import { StaticQuery } from 'gatsby';
 import PropTypes from 'prop-types';
+export default from "./preview"
 
 // Allow string OR patched queries format
 StaticQuery.propTypes.query = PropTypes.oneOfType([
@@ -46,7 +47,7 @@ export const setOptions = (name, opts) => {
   options.set(name, opts);
 }
 
-const getQuery = query => {
+export const getQuery = query => {
   if (typeof query === 'object' && query.definitions) {
     return query;
   } else if (typeof query === 'string') {

@@ -21,7 +21,6 @@ const getRootQuery = (componentPath) => {
       }
     }
   } catch (err) {
-    console.error('gatsby-source-prismic-universal: Could not parse component path: ', componentPath);
     console.error(err);
   }
   return null;

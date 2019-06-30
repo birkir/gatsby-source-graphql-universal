@@ -1,4 +1,4 @@
-# gatsby-source-graphql-universal
+# gatsby-source-wagtail
 
 > NOTE: This is an universal version of the official `gatsby-source-graphql` source plugin. It modifies the babel plugins to skip the removal of graphql queries so they can be re-used.
 
@@ -15,7 +15,7 @@ There is a higher order component to wrap components to get access to graphql qu
 
 ```jsx
 import { graphql } from 'gatsby';
-import { withGraphql } from 'gatsby-source-graphql-universal';
+import { withGraphql } from 'gatsby-source-wagtail';
 
 export const fooFragment = graphql`
   fragment Planet on ...SWAPI_Planet {
@@ -79,7 +79,7 @@ You can get isolated query to your graphql endpoint by re-using the composing fu
 
 ```js
 import { graphql } from 'gatsby';
-import { getIsolatedQuery } from 'gatsby-source-graphql-universal';
+import { getIsolatedQuery } from 'gatsby-source-wagtail';
 
 const query = gatsby`
   query {
@@ -126,7 +126,7 @@ Query type and putting it under field of Gatsby GraphQL Query.
 
 ## Install
 
-`npm install --save gatsby-source-graphql-universal`
+`npm install --save gatsby-source-wagtail`
 
 ## How to use
 
@@ -140,7 +140,7 @@ module.exports = {
   plugins: [
     // Simple config, passing URL
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         // This type will contain remote schema Query type
         typeName: "SWAPI",
@@ -152,7 +152,7 @@ module.exports = {
     },
     // Passing paramaters (passed to apollo-link)
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         typeName: "GitHub",
         fieldName: "github",
@@ -169,7 +169,7 @@ module.exports = {
     },
     // Creating arbitrary Apollo Link (for advanced situations)
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         typeName: "GitHub",
         fieldName: "github",
@@ -222,7 +222,7 @@ const { buildSchema, buildClientSchema } = require("graphql")
 module.exports = {
   plugins: [
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         typeName: "SWAPI",
         fieldName: "swapi",
@@ -237,7 +237,7 @@ module.exports = {
       },
     },
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         typeName: "SWAPI",
         fieldName: "swapi",
@@ -255,7 +255,7 @@ module.exports = {
 
 # Refetching data
 
-By default, `gatsby-source-graphql-universal` will only refetch the data once the server is restarted. It's also possible to configure the plugin to 
+By default, `gatsby-source-wagtail` will only refetch the data once the server is restarted. It's also possible to configure the plugin to 
 periodically refetch the data. The option is called `refetchInterval` and specifies the timeout in seconds.
 
 ```js
@@ -263,7 +263,7 @@ module.exports = {
   plugins: [
     // Simple config, passing URL
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "gatsby-source-wagtail",
       options: {
         // This type will contain remote schema Query type
         typeName: "SWAPI",

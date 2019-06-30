@@ -7,7 +7,7 @@ exports.prepareOptions = (babel) => {
     items[3].splice(
       0,
       1,
-      babel.createConfigItem([require.resolve('gatsby-source-graphql-universal/babel-plugin-remove-graphql-queries.js')], {
+      babel.createConfigItem([require.resolve('gatsby-source-wagtail/babel-plugin-remove-graphql-queries.js')], {
         type: 'plugin',
       })
     )

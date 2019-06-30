@@ -1,17 +1,20 @@
+import React from 'react'
 import qs from "querystring";
 import { cloneDeep, merge } from "lodash";
 import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import { split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import { throwServerError } from "apollo-link-http-common";
 import { print } from "graphql/language/printer"
+
 import { getIsolatedQuery } from './index'
+import introspectionQueryResultData from './fragmentTypes.json'
 
 
-const generatePreviewQuery = (query, contentType, token, subscribe = false) => {
+const generatePreviewQuery = (query, contentType, token, fragments, subscribe = false) => {
   // The preview args nessacery for preview backend to find the right model.
   query = cloneDeep(query);
   const previewArgs = [
@@ -42,7 +45,11 @@ const generatePreviewQuery = (query, contentType, token, subscribe = false) => {
   ];
 
   // Rename query for debugging reasons
+  console.log(query)
   const queryDef = query.definitions[0];
+  queryDef.arguments = []
+  queryDef.variableDefinitions = []
+
   if (queryDef.name) {
     queryDef.name.value = "Preview" + queryDef.name.value;
   } else {
@@ -68,16 +75,19 @@ const generatePreviewQuery = (query, contentType, token, subscribe = false) => {
     queryDef.selectionSet.selections = pageSelections;
   }
 
-  return print(query);
+  return `    
+    ${fragments}
+    ${print(query)}
+  `;
 };
 
-const decodePreviewUrl = () => {
+export const decodePreviewUrl = () => {
   if (typeof window !== "undefined") {
     return qs.parse(window.location.search.slice(1));
   }
 };
 
-const PreviewProvider = (query, onNext) => {
+const PreviewProvider = (query, fragments = '', onNext) => {
   // Extract query from wagtail schema
   const isolatedQuery = getIsolatedQuery(query, "wagtail", "wagtail");
   const { content_type, token } = decodePreviewUrl();
@@ -87,12 +97,14 @@ const PreviewProvider = (query, onNext) => {
       isolatedQuery,
       content_type,
       token,
+      fragments,
       true
     );
     const previewQuery = generatePreviewQuery(
       isolatedQuery,
       content_type,
       token,
+      fragments,
       false
     );
 
@@ -124,8 +136,13 @@ const PreviewProvider = (query, onNext) => {
       httpLink
     );
 
+    // Loading fragments
+    const fragmentMatcher = new IntrospectionFragmentMatcher({
+      introspectionQueryResultData
+    });
+
     // Create actual client that makes requests
-    const cache = new InMemoryCache();
+    const cache = new InMemoryCache({ fragmentMatcher });
     const client = new ApolloClient({ link, cache });
 
     // Get first version of preview to render the template
@@ -148,17 +165,17 @@ const PreviewProvider = (query, onNext) => {
   }
 };
 
-export default withPreview = (WrappedComponent, pageQuery) => {
+export const withPreview = (WrappedComponent, pageQuery, fragments = '') => {
   // ...and returns another component...
   return class extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        wagtail: cloneDeep(props.data.wagtail)
+        wagtail: cloneDeep((props.data) ? props.data.wagtail : {})
       };
-      PreviewProvider(pageQuery, res => {
+      PreviewProvider(pageQuery, fragments, res => {
         this.setState({
-          wagtail: merge({}, this.props.data.wagtail, res.data)
+          wagtail: merge({}, this.state.wagtail, res.data)
         });
       });
     }
@@ -173,3 +190,5 @@ export default withPreview = (WrappedComponent, pageQuery) => {
     }
   };
 };
+
+export default withPreview

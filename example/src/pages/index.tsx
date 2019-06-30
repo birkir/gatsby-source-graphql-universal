@@ -2,7 +2,7 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout'
 import SEO from '../components/seo'
-import { withGraphql } from 'gatsby-source-graphql-universal';
+import { withGraphql } from 'gatsby-source-wagtail';
 
 export const planetFragment = graphql`
   fragment Planet on SWAPI_Planet {

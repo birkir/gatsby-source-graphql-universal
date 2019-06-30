@@ -5272,9 +5272,9 @@ gatsby-source-filesystem@^2.0.8:
     valid-url "^1.0.9"
     xstate "^3.1.0"
 
-gatsby-source-graphql-universal@2.0.2:
+gatsby-source-wagtail@2.0.2:
   version "2.0.2"
-  resolved "https://registry.yarnpkg.com/gatsby-source-graphql-universal/-/gatsby-source-graphql-universal-2.0.2.tgz#5a425ba20b18f9a585e5f2f2614cf89a1edbec81"
+  resolved "https://registry.yarnpkg.com/gatsby-source-wagtail/-/gatsby-source-wagtail-2.0.2.tgz#5a425ba20b18f9a585e5f2f2614cf89a1edbec81"
   integrity sha512-IWKClQJ4Pew46rmvkpAl1+gVsXvHHuVk9BxW0/pXrWYEX7OC2ZKosF+ETc6b1bSnescO1vyZwfzl3KxkaxiJgg==
   dependencies:
     "@babel/runtime" "^7.0.0"

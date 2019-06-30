@@ -4,9 +4,9 @@ exports.onRenderBody = ({ setHeadComponents }, pluginOptions) => {
   const { typeName, fieldName, url, headers } = pluginOptions;
   setHeadComponents([
     <script
-      key={`plugin-graphql-universal-${typeName}`}
+      key={`plugin-wagtail-${typeName}`}
       dangerouslySetInnerHTML={{
-        __html: `window.___graphqlUniversal = window.___graphqlUniversal || {}; window.___graphqlUniversal["${fieldName}"] = ${JSON.stringify({ typeName, fieldName, url, headers })}; `
+        __html: `window.___wagtail = window.___wagtail || {}; window.___wagtail["${fieldName}"] = ${JSON.stringify({ typeName, fieldName, url, headers })}; `
       }}
     />
   ]);

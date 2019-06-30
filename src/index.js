@@ -5,7 +5,7 @@ import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
 import { StaticQuery } from 'gatsby';
 import PropTypes from 'prop-types';
-export default from "./preview"
+export { withPreview, decodePreviewUrl } from "./preview"
 
 // Allow string OR patched queries format
 StaticQuery.propTypes.query = PropTypes.oneOfType([
@@ -21,7 +21,7 @@ const options = new Map();
 export const getOptions = (name) => {
   if (!options.has(name)) {
     if (typeof window !== 'undefined') {
-      setOptions(name, window.___graphqlUniversal[name])
+      setOptions(name, window.___wagtail[name])
     }
   }
 
@@ -30,13 +30,13 @@ export const getOptions = (name) => {
 
 export const setOptions = (name, opts) => {
   if (!opts) {
-    throw new Error('GraphQL Universal: No options "' + name + '".');
+    throw new Error('Wagtail: No options "' + name + '".');
   }
   if (!opts.client && !opts.url) {
-    throw new Error('GraphQL Universal: Could not get "url" for "' + name + '".');
+    throw new Error('Wagtail: Could not get "url" for "' + name + '".');
   }
   if (!opts.typeName) {
-    throw new Error('GraphQL Universal: Could not get "typeName" for "' + name + '".');
+    throw new Error('Wagtail: Could not get "typeName" for "' + name + '".');
   }
   if (!opts.client) {
     opts.client = new ApolloClient({
@@ -86,68 +86,3 @@ export const getIsolatedQuery = (querySource, fieldName, typeName) => {
 
   return updatedQuery;
 }
-
-export const withGraphql = WrappedComponent => {
-  return class extends React.Component {
-    
-    state = {
-      data: this.props.data,
-    }
-
-    graphql = (fieldName, { query, client, fragments = [], composeData = true, ...queryProps }) => {
-      // Get options for graphql source plugin
-      const options = getOptions(fieldName);
-
-      if (!client && (!options || !options.client)) {
-        if (typeof window === 'undefined') {
-          console.warn('GraphQL Universal: Options cannot be passed to plugin on server');
-        } else {
-          console.warn('GraphQL Universal: No options found for plugin "' + fieldName + '"');
-        }
-        return;
-      }
-
-      const { typeName } = options;
-      const apolloClient = client || options.client;
-
-      const updatedQuery = getIsolatedQuery(query, fieldName, typeName);
-
-      updatedQuery.definitions = updatedQuery.definitions.concat(
-        ...fragments.map(fragment => getIsolatedQuery(fragment, null, typeName).definitions)
-      );
-
-      const rootValue = (this.state.data && this.state.data[fieldName]) || {};
-
-      const res = apolloClient.query({
-        query: updatedQuery,
-        fetchPolicy: 'network-only',
-        ...queryProps
-      });
-
-      if (composeData) {
-        return res.then(res => {
-          this.setState({
-            data: {
-              ...this.state.data,
-              [fieldName]: {
-                ...rootValue,
-                ...res.data,
-              },
-            },
-          });
-          return res;
-        });
-      }
-
-      return res;
-    }
-
-    render() {
-      return <WrappedComponent
-        {...this.props}
-        graphql={this.graphql}
-        data={this.state.data}
-      />;
-    }
-  };
-};

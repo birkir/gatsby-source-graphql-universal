@@ -83,8 +83,8 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 
 exports.onPreExtractQueries = async ({ store, getNodes }) => {
   const program = store.getState().program
-  await fs.copy(
-    require.resolve(`gatsby-source-wagtail/fragments.js`),
-    `${program.directory}/.cache/fragments/gatsby-source-wagtail-fragments.js`
-  )
+  // await fs.copy(
+  //   require.resolve(`gatsby-source-wagtail/fragments.js`),
+  //   `${program.directory}/.cache/fragments/gatsby-source-wagtail-fragments.js`
+  // )
 }

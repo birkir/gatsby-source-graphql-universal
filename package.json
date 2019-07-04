@@ -55,7 +55,7 @@
   },
   "repository": "https://github.com/NathHorrigan/gatsby-source-wagtail/",
   "scripts": {
-    "build": "babel src/**/* --out-dir ./ --ignore **/__tests__",
+    "build": "babel src/**/* --out-dir ./ --ignore **/__tests__ && cp src/fragments.js .",
     "prepare": "cross-env NODE_ENV=production npm run build",
     "watch": "babel -w src --out-dir . --ignore **/__tests__",
     "clean": "rm -rf ./*.js"

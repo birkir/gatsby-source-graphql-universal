@@ -12,19 +12,7 @@ const queryBackend = (query, url) => fetch(`${url}/graphql`, {
   }),
 }).then(result => result.json())
 
-exports.sourceNodes = async (
-  { actions, getNodes, createNodeId, cache, createContentDigest },
-  options
-) => {
-  const { touchNode } = actions
-  sourceNodes({ actions, getNodes, createNodeId, cache, createContentDigest }, options)
-  const nodes = getNodes().filter(node => {
-    if (node.context != null) {
-        return node.context.contentType != null
-    }
-  })
-  nodes.map(node => touchNode({ nodeId: node.id }))
-}
+exports.sourceNodes = sourceNodes
 
 exports.onCreatePage = ({ page, actions }, options) => {
   const rootQuery = getRootQuery(page.componentPath);

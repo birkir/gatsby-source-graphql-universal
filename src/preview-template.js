@@ -4,6 +4,7 @@ import {
   decodePreviewUrl,
   withPreview
 } from "./preview"
+import baseFragments from '../../.cache/fragments/gatsby-source-wagtail-fragments.js'
 
 const PreviewPage = props => {
     const { pageMap, fragmentFiles = [] } = props.pageContext
@@ -12,6 +13,11 @@ const PreviewPage = props => {
     if (pageMap && isBrowser) {
         
         // Import all fragment files and extract string
+        let fragments = ''
+        if (baseFragments) {
+            fragments += baseFragments.source
+        }
+
         if (fragmentFiles.length) {
             fragmentFiles.map(file => {
                 const module = require(`../../${file.slice(2)}`)

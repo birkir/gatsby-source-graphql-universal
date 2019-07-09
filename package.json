@@ -32,7 +32,9 @@
     "lodash.get": "^4.4.2",
     "query-string": "^6.8.1",
     "react": "^16.8.6",
-    "traverse": "^0.6.6"
+    "traverse": "^0.6.6",
+    "core-js": "^2.6.9",
+    "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

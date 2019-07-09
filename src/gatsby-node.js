@@ -42,7 +42,7 @@ exports.onCreatePage = ({ page, actions }, options) => {
       result.data.__schema.types = filteredData;
       fs.writeFile('./node_modules/gatsby-source-wagtail/fragmentTypes.json', JSON.stringify(result.data), err => {
         if (err) {
-          console.error('Error writing fragmentTypes file', err);
+          console.error('Gatsby-source-wagtail: Error writing fragmentTypes file', err);
         }
       });
     });
@@ -50,7 +50,6 @@ exports.onCreatePage = ({ page, actions }, options) => {
 
 exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
   const config = getConfig()
-
   if (stage.indexOf('html') >= 0) {
     return;
   }
@@ -77,6 +76,9 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
   };
 
   config.module.rules.forEach(traverseRule)
+  
+  // Remove nasty core-js that causes issues with Storybook.
+  delete config.resolve.alias['core-js']
 
   actions.replaceWebpackConfig(config)
 };

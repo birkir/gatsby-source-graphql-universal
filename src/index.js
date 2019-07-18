@@ -6,14 +6,16 @@ import cloneDeep from 'lodash.clonedeep';
 import { StaticQuery } from 'gatsby';
 import PropTypes from 'prop-types';
 
-// Allow string OR patched queries format
-StaticQuery.propTypes.query = PropTypes.oneOfType([
-  PropTypes.string,
-  PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    source: PropTypes.string.isRequired,
-  })
-]).isRequired;
+// Allow string OR patched queries format (in development)
+if (StaticQuery && typeof StaticQuery === 'object' && StaticQuery.propTypes) {
+  StaticQuery.propTypes.query = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      source: PropTypes.string.isRequired,
+    })
+  ]).isRequired;
+}
 
 const options = new Map();
 

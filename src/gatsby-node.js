@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const { sourceNodes } = require('./graphql-nodes');
 const { getRootQuery } = require('./getRootQuery');
 
-const queryBackend = (query, url) => fetch(`${url}/graphql`, {
+const queryBackend = (query, url) => fetch(url, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({

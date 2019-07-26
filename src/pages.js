@@ -27,7 +27,7 @@ export const createWagtailPages = (pageMap, graphql, actions, fragmentFiles) => 
                     const template = pageMap[matchingKey]
                     createPage({
                         path: page.urlPath,
-                        component: path.resolve(template),
+                        component: path.resolve('./src/' + template),
                         context: page,
                     })                    
                 }

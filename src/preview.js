@@ -45,7 +45,6 @@ const generatePreviewQuery = (query, contentType, token, fragments, subscribe = 
   ];
 
   // Rename query for debugging reasons
-  console.log(query)
   const queryDef = query.definitions[0];
   queryDef.arguments = []
   queryDef.variableDefinitions = []
@@ -85,12 +84,15 @@ export const decodePreviewUrl = () => {
   if (typeof window !== "undefined") {
     return qs.parse(window.location.search.slice(1));
   }
+  return {}
 };
 
 const PreviewProvider = (query, fragments = '', onNext) => {
   // Extract query from wagtail schema
-  const isolatedQuery = getIsolatedQuery(query, "wagtail", "wagtail");
+  const {typeName, fieldName, url } = window.___wagtail.wagtail
+  const isolatedQuery = getIsolatedQuery(query, fieldName, typeName);
   const { content_type, token } = decodePreviewUrl();
+  const endpoint = new URL(url)
 
   if (content_type && token) {
     const previewSubscription = generatePreviewQuery(
@@ -110,12 +112,12 @@ const PreviewProvider = (query, fragments = '', onNext) => {
 
     // Create an http link:
     const httpLink = new HttpLink({
-      uri: "http://localhost:8000/graphql"
+      uri: url
     });
 
     // Create a WebSocket link:
     const wsLink = new WebSocketLink({
-      uri: `ws://localhost:8000/subscriptions`,
+      uri: `ws://${endpoint.host}/subscriptions`,
       options: {
         reconnect: true
       }

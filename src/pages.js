@@ -6,7 +6,7 @@ export const createWagtailPages = (pageMap, graphql, actions, fragmentFiles) => 
             wagtail {
                 pages {
                     contentType
-                    urlPath
+                    url
                     slug
                     id
                 }
@@ -26,7 +26,7 @@ export const createWagtailPages = (pageMap, graphql, actions, fragmentFiles) => 
                 if (matchingKey) {
                     const template = pageMap[matchingKey]
                     createPage({
-                        path: page.urlPath,
+                        path: page.url,
                         component: path.resolve('./src/' + template),
                         context: page,
                     })                    

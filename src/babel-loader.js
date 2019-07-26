@@ -44,6 +44,7 @@ module.exports = babelLoader.custom(babel => {
         requiredPresets,
         requiredPlugins,
         fallbackPresets,
+        stage
       ] = prepareOptions(babel)
 
       // If there is no filesystem babel config present, add our fallback

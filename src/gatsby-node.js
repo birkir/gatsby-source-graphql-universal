@@ -74,12 +74,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
     }
 
   };
-
   config.module.rules.forEach(traverseRule)
-  
-  // Remove nasty core-js that causes issues with Storybook.
-  delete config.resolve.alias['core-js']
-
   actions.replaceWebpackConfig(config)
 };
 

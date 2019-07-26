@@ -3,18 +3,8 @@ import gql from 'graphql-tag';
 import ApolloClient from 'apollo-boost';
 import traverse from 'traverse';
 import cloneDeep from 'lodash.clonedeep';
-import { StaticQuery } from 'gatsby';
 import PropTypes from 'prop-types';
 export { withPreview, decodePreviewUrl } from "./preview"
-
-// Allow string OR patched queries format
-StaticQuery.propTypes.query = PropTypes.oneOfType([
-  PropTypes.string,
-  PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    source: PropTypes.string.isRequired,
-  })
-]).isRequired;
 
 const options = new Map();
 

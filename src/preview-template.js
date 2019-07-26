@@ -6,54 +6,50 @@ import { query as wagtailBaseFragments } from "../../.cache/fragments/gatsby-sou
 class PreviewPage extends React.Component {
   state = { components: [], fragments: wagtailBaseFragments.source };
 
-  async componentDidMount() {
-    await this.fetchFragments()
-    await this.fetchComponents()
+  constructor(props) {
+    super(props);
+    this.fetchFragments.bind(this);
+    this.fetchComponents.bind(this);
   }
 
-  fetchFragments = () => {
+  componentDidMount() {
+    if (typeof window != `undefined`) {
+      this.fetchFragments();
+      this.fetchComponents();
+    }
+  }
+
+  fetchFragments() {
     const { fragmentFiles } = this.props.pageContext;
-
-    return Promise.all(
-      fragmentFiles.map(file => {
-        import("../../src/" + file)
-          .then(mod => {
-            Object.keys(mod).map(exportKey => {
-              const exportObj = mod[exportKey];
-              if (typeof exportObj.source == "string") {
-                this.setState({
-                  fragments: this.state.fragments += exportObj.source
-                })
-              }
-            });
-          })
-          .catch(e => null);
-      })
-    )
+    fragmentFiles.map(file => {
+      const mod = require("../../src/" + file);
+      Object.keys(mod).map(exportKey => {
+        const exportObj = mod[exportKey];
+        if (typeof exportObj.source == "string") {
+          this.setState({
+            fragments: (this.state.fragments += exportObj.source)
+          });
+        }
+      });
+    })
   }
 
-  fetchComponents = () => {
+  fetchComponents() {
     const { pageMap } = this.props.pageContext;
-    
-    return Promise.all(
-      Object.keys(pageMap).map(contentType => {
-          import("../../src/" + pageMap[contentType])
-            .then(componentFile => {
-              this.setState({
-                components: {
-                  ...this.state.components,
-                  [contentType.toLowerCase()]: withPreview(
-                    componentFile.default,
-                    componentFile.query,
-                    this.state.fragments
-                  )
-                }
-              });
-            })
-            .catch(e => null);
-        })
-    )
-  };
+    Object.keys(pageMap).map(contentType => {
+      const componentFile = require("../../src/" + pageMap[contentType]);
+      this.setState({
+        components: {
+          ...this.state.components,
+          [contentType.toLowerCase()]: withPreview(
+            componentFile.default,
+            componentFile.query,
+            this.state.fragments
+          )
+        }
+      });
+    })
+  }
 
   render() {
     const { content_type } = decodePreviewUrl();

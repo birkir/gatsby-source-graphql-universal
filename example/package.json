@@ -29,6 +29,7 @@
     "develop": "gatsby develop",
     "start": "npm run develop",
     "format": "prettier --write \"src/**/*.js\"",
+    "copy-plugin": "cp -R ../*.js node_modules/gatsby-source-graphql-universal/.",
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
   },
   "devDependencies": {

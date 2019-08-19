@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs-extra');
 const { sourceNodes } = require('./graphql-nodes');
 const { getRootQuery } = require('./getRootQuery');
+const { generateImageFragments } = require('./fragments')
 
 const queryBackend = (query, url) => fetch(url, {
   method: 'POST',
@@ -78,10 +79,15 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
   actions.replaceWebpackConfig(config)
 };
 
-exports.onPreExtractQueries = async ({ store, getNodes }) => {
-  const program = store.getState().program
-  await fs.copy(
-    require.resolve(`gatsby-source-wagtail/fragments.js`),
-    `${program.directory}/.cache/fragments/gatsby-source-wagtail-fragments.js`
-  )
+exports.onPreExtractQueries = async ({ store, getNodes }, options) => {
+  queryBackend(`{
+    imageType
+  }`, options.url).then(({data}) => {
+    const fragments = generateImageFragments(data.imageType)
+    fs.writeFile(
+      `${program.directory}/.cache/fragments/gatsby-source-wagtail-fragments.js`, 
+      fragments, 
+      err => console.error(err)
+    )
+  })
 }

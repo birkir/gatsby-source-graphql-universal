@@ -2,6 +2,7 @@ exports.generateImageFragments = type => `
     import { graphql } from 'gatsby'
 
     export const query = graphql\`
+    
         fragment WagtailImageFixed on ${type} {
             base64
             width
@@ -47,5 +48,5 @@ exports.generateImageFragments = type => `
             srcSet(sizes: [300, 400, 800, 1400])
             sizes
         }
-    }\`
+    \`
 `

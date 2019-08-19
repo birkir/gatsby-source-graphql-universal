@@ -82,7 +82,8 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 exports.onPreExtractQueries = async ({ store, getNodes }, options) => {
   queryBackend(`{
     imageType
-  }`, options.url).then(({data}) => {
+  }`, options.url).then(({ data }) => {
+    const program = store.getState().program
     const fragments = generateImageFragments(data.imageType)
     fs.writeFile(
       `${program.directory}/.cache/fragments/gatsby-source-wagtail-fragments.js`, 

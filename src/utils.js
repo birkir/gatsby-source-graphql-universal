@@ -1,8 +1,8 @@
 const { prepareOptions } = require(`gatsby/dist/utils/babel-loader-helpers`)
 
-exports.prepareOptions = (babel) => {
-  const items = prepareOptions(babel)
-
+exports.prepareOptions = (babel, options) => {
+  const items = prepareOptions(babel, options)
+  
   if (items.length > 2) {
     items[3].splice(
       0,

@@ -6,7 +6,7 @@
   "bugs": {
     "url": "https://github.com/NathHorrigan/gatsby-source-wagtail/issues"
   },
-  "main": "dist/index.js",
+  "main": "index.js",
   "files": [
     "*.js",
     "index.d.ts"

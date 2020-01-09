@@ -1,8 +1,9 @@
 import React from 'react';
-import { graphql } from 'gatsby';
+import { graphql, useStaticQuery } from 'gatsby';
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import { withGraphql } from 'gatsby-source-graphql-universal';
+import { BestFilm } from '../components/best-film';
 
 export const planetFragment = graphql`
   fragment Planet on SWAPI_Planet {
@@ -74,6 +75,7 @@ class IndexPage extends React.Component {
     return (
       <Layout>
         <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
+        <BestFilm />
         <h1>
           List of movies
           {this.state.loading && <img alt="loading..." style={{ height: 30, margin: '0 0 0 16px' }} src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" />}

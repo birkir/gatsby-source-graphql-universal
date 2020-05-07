@@ -1,7 +1,8 @@
 /*  eslint-disable new-cap */
 const graphql = require(`gatsby/graphql`)
-const murmurhash = require(`babel-plugin-remove-graphql-queries/murmur`)
 const nodePath = require(`path`)
+const murmurModule = require(`babel-plugin-remove-graphql-queries/murmur`)
+const murmurhash = typeof murmurModule === 'function' ? murmurModule : murmurModule.murmurhash
 
 const isGlobalIdentifier = tag =>
   tag.isIdentifier({ name: `graphql` }) && tag.scope.hasGlobal(`graphql`)
@@ -268,7 +269,7 @@ export default function({ types: t }) {
               path2.replaceWith(
                 getGraphqlExpr(t, this.queryHash, this.query)
               )
-              
+
               path2.replaceWith(t.memberExpression(identifier, t.identifier(`data`)))
 
 

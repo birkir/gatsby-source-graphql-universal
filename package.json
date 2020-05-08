@@ -15,7 +15,7 @@
     "@babel/runtime": "^7.0.0",
     "@types/graphql": "^14.0.4",
     "apollo-boost": "^0.1.23",
-    "gatsby-source-graphql": "^2.0.8",
+    "gatsby-source-graphql": "^2.1.15",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^4.0.3",

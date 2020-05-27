@@ -11,7 +11,7 @@ module.exports = {
       options: {
         typeName: "SWAPI",
         fieldName: "swapi",
-        url: "https://api.graphcms.com/simple/v1/swapi",
+        url: "https://swapi-graphql.netlify.app/.netlify/functions/index",
       },
     },
     `gatsby-plugin-react-helmet`,

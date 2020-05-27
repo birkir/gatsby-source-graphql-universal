@@ -13,56 +13,68 @@ export const planetFragment = graphql`
 `;
 
 export const query = graphql`
-  query homepage($skip: Int, $limit: Int = 2) {
+  query homepage($first: Int = 2, $last: Int, $before:String, $after: String) {
     site {
       siteMetadata {
         title
       }
     }
     swapi {
-      allFilms(first: $limit, skip: $skip) {
-        id
-        title
-        planets {
-          ...Planet
+      allFilms(first: $first, last: $last, after: $after, before: $before) {
+        edges {
+          cursor
+          node {
+            id
+            title
+            planetConnection {
+              edges {
+                node {
+                  ...Planet
+                }
+              }
+            }
+          }
         }
       }
     }
   }
 `;
 
+const limit = 2;
+
 class IndexPage extends React.Component {
 
   state = {
-    skip: 0,
-    limit: 2,
+    after:null,
+    before:null,
+    first:limit,
+    last:null,
     loading: false,
   }
 
   update = async () => {
-    const { skip, limit } = this.state;
+    const { after, before, first, last } = this.state;
     this.setState({ loading: true });
 
     await this.props.graphql('swapi', {
       query,
       fragments: [planetFragment],
-      variables: {
-        skip,
-        limit,
-      },
+      variables: this.state,
     });
     this.setState({ loading: false });
   }
 
   onPrevClick = () => {
-    this.setState({ skip: this.state.skip - this.state.limit }, this.update);
+    const { cursor } = this.props.data.swapi.allFilms.edges.length ? this.props.data.swapi.allFilms.edges.slice(0).shift() : { cursor: this.state.after };
+    this.setState({ before: cursor, after: null, first: null, last: limit }, this.update);
   }
 
   onNextClick = () => {
-    this.setState({ skip: this.state.skip + this.state.limit }, this.update);
+    const { cursor } = this.props.data.swapi.allFilms.edges.slice(0).pop();
+    this.setState({ before: null, after: cursor, first: limit, last: null }, this.update);
   }
 
-  renderFilm(film) {
+  renderFilm({ node: film }) {
     return (
       <li key={film.id}>
         {film.title}
@@ -72,6 +84,8 @@ class IndexPage extends React.Component {
 
   render() {
     const { data } = this.props;
+    const d = data.swapi.allFilms.edges.length ? atob(data.swapi.allFilms.edges[0].cursor).split(':') : [];
+    const index = Number(d.length ? d[1] : -1);
     return (
       <Layout>
         <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
@@ -80,9 +94,9 @@ class IndexPage extends React.Component {
           List of movies
           {this.state.loading && <img alt="loading..." style={{ height: 30, margin: '0 0 0 16px' }} src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" />}
         </h1>
-        {data.swapi.allFilms.map(this.renderFilm)}
-        <button onClick={this.onPrevClick} disabled={this.state.skip === 0}>Prev</button>
-        <button onClick={this.onNextClick} disabled={data.swapi.allFilms.length < 2}>Next</button>
+        {data.swapi.allFilms.edges.map(this.renderFilm)}
+        <button onClick={this.onPrevClick} disabled={index === 0}>Prev</button>
+        <button onClick={this.onNextClick} disabled={index === -1}>Next</button>
       </Layout>
     );
   }

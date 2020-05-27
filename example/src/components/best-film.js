@@ -5,18 +5,20 @@ export const BestFilm = () => {
     const data = useStaticQuery(graphql`
       query {
         swapi {
-          allFilms(filter:{
-            id:"cj0nxmy3fga5s01148gf8iy3c"
-          }) {
-            id
-            title
+          allFilms(first:1) {
+            edges {
+              node {
+                id
+                title
+              }
+            }
           }
         }
       }
     `);
     return (
       <section>
-        <h3>Best Film: {data.swapi.allFilms[0].title}</h3>
+        <h3>Best Film: {data.swapi.allFilms.edges[0].node.title}</h3>
       </section>
     )
   }

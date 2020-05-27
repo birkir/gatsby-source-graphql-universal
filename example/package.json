@@ -13,12 +13,16 @@
     "gatsby-plugin-sharp": "^2.0.14",
     "gatsby-plugin-typescript": "^2.0.3",
     "gatsby-source-filesystem": "^2.0.8",
-    "gatsby-source-graphql-universal": "2.0.2",
+    "gatsby-source-graphql-universal": "file:../packages/gatsby-source-graphql-universal",
     "gatsby-transformer-sharp": "^2.1.8",
+    "graphql-tools": "5.0.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-helmet": "^5.2.0"
+  },
+  "resolutions": {
+    "graphql": "14.6.0"
   },
   "keywords": [
     "gatsby"

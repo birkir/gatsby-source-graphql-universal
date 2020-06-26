@@ -21,7 +21,7 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 
   const replaceRule = ruleUse => {
     if (ruleUse.loader && ruleUse.loader.indexOf(`gatsby/dist/utils/babel-loader.js`) >= 0) {
-      ruleUse.loader = require.resolve(`gatsby-source-graphql-universal/babel-loader.js`);
+      ruleUse.loader = require.resolve(`@prismicio/gatsby-source-graphql-universal/babel-loader.js`);
     }
   }
 

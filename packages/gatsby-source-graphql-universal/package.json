@@ -9,7 +9,8 @@
   "main": "index.js",
   "files": [
     "*.js",
-    "index.d.ts"
+    "index.d.ts",
+    "third-party/*.js"
   ],
   "dependencies": {
     "apollo-boost": "^0.4.9",

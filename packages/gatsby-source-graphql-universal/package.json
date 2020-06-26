@@ -1,10 +1,13 @@
 {
-  "name": "gatsby-source-graphql-universal",
+  "name": "@prismic/gatsby-source-graphql-universal",
   "description": "Gatsby plugin which adds a third-party GraphQL API to Gatsby GraphQL with client side execution",
   "version": "3.4.0",
   "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
+  "contributors": [
+    "Marc McIntosh <marc.mcintosh@prismicc.io",
+  ],
   "bugs": {
-    "url": "https://github.com/birkir/gatsby-source-graphql-universal/issues"
+    "url": "https://github.com/prismicio/gatsby-source-graphql-universal/issues"
   },
   "main": "index.js",
   "files": [
@@ -39,7 +42,7 @@
     "gatsby": "^2.22.11",
     "graphql": "^14.6.0"
   },
-  "repository": "https://github.com/birkir/gatsby-source-graphql-universal",
+  "repository": "https://github.com/prismicio/gatsby-source-graphql-universal",
   "scripts": {
     "build": "babel src --out-dir . --ignore **/__tests__",
     "prepare": "cross-env NODE_ENV=production npm run build",

@@ -4,7 +4,7 @@
   "version": "3.4.0",
   "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
   "contributors": [
-    "Marc McIntosh <marc.mcintosh@prismicc.io",
+    "Marc McIntosh <marc.mcintosh@prismicc.io"
   ],
   "bugs": {
     "url": "https://github.com/prismicio/gatsby-source-graphql-universal/issues"

@@ -138,7 +138,8 @@ function getGraphQLTag(path) {
   }
 
   const text = quasis[0].value.raw;
-  const hash = murmurhash(text, `abc`);
+  const normalizedText = graphql.stripIgnoredCharacters(text);
+  const hash = murmurhash(normalizedText, `abc`);
 
   try {
     const ast = graphql.parse(text);
@@ -149,7 +150,7 @@ function getGraphQLTag(path) {
 
     return {
       ast,
-      text,
+      text: normalizedText,
       hash,
       isGlobal
     };

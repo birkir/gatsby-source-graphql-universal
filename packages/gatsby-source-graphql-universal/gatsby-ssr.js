@@ -11,7 +11,7 @@ exports.onRenderBody = ({
         fieldName = pluginOptions.fieldName,
         url = pluginOptions.url,
         headers = pluginOptions.headers;
-  setHeadComponents([_react.default.createElement("script", {
+  setHeadComponents([/*#__PURE__*/_react.default.createElement("script", {
     key: `plugin-graphql-universal-${typeName}`,
     dangerouslySetInnerHTML: {
       __html: `window.___graphqlUniversal = window.___graphqlUniversal || {}; window.___graphqlUniversal["${fieldName}"] = ${JSON.stringify({

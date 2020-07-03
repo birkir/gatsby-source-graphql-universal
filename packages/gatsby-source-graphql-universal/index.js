@@ -166,7 +166,7 @@ const withGraphql = WrappedComponent => {
     }
 
     render() {
-      return _react.default.createElement(WrappedComponent, (0, _extends2.default)({}, this.props, {
+      return /*#__PURE__*/_react.default.createElement(WrappedComponent, (0, _extends2.default)({}, this.props, {
         graphql: this.graphql,
         data: this.state.data
       }));

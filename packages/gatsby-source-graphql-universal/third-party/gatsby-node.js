@@ -13,7 +13,7 @@ const _require = require(`gatsby/graphql`),
       printSchema = _require.printSchema;
 
 const _require2 = require(`graphql-tools`),
-      transformSchema = _require2.transformSchema,
+      wrapSchema = _require2.wrapSchema,
       introspectSchema = _require2.introspectSchema,
       RenameTypes = _require2.RenameTypes;
 
@@ -31,9 +31,10 @@ const _require5 = require(`gatsby-source-graphql/transforms`),
       NamespaceUnderFieldTransform = _require5.NamespaceUnderFieldTransform,
       StripNonQueryTransform = _require5.StripNonQueryTransform;
 
-exports.sourceNodes =
-/*#__PURE__*/
-function () {
+const _require6 = require(`@graphql-tools/links`),
+      linkToExecutor = _require6.linkToExecutor;
+
+exports.sourceNodes = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2.default)(function* ({
     actions,
     createNodeId,
@@ -82,7 +83,7 @@ function () {
       let sdl = yield cache.get(cacheKey);
 
       if (!sdl) {
-        introspectionSchema = yield introspectSchema(link);
+        introspectionSchema = yield introspectSchema(linkToExecutor(link));
         sdl = printSchema(introspectionSchema);
       } else {
         introspectionSchema = buildSchema(sdl);
@@ -108,9 +109,10 @@ function () {
       return {};
     };
 
-    const schema = transformSchema({
+    const schema = wrapSchema({
       schema: introspectionSchema,
-      link
+      link,
+      executor: linkToExecutor(link)
     }, [new StripNonQueryTransform(), new RenameTypes(name => `${typeName}_${name}`), new NamespaceUnderFieldTransform({
       typeName,
       fieldName,

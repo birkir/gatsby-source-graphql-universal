@@ -61,6 +61,23 @@ class GraphQLSyntaxError extends Error {
   }
 }
 
+export function followVariableDeclarations(binding) {
+  const node = binding.path?.node
+  if (
+    node &&
+    node.type === `VariableDeclarator` &&
+    node.id.type === `Identifier` &&
+    node.init.type === `Identifier`
+  ) {
+    return followVariableDeclarations(
+      binding.path.scope.getBinding(node.init.name)
+    )
+  }
+  return binding
+}
+
+
+
 function getTagImport(tag) {
   const name = tag.node.name
   const binding = tag.scope.getBinding(name)
@@ -385,21 +402,6 @@ export default function({ types: t }) {
             })
           },
         })
-
-        function followVariableDeclarations(binding) {
-          const node = binding.path?.node
-          if (
-            node &&
-            node.type === `VariableDeclarator` &&
-            node.id.type === `Identifier` &&
-            node.init.type === `Identifier`
-          ) {
-            return followVariableDeclarations(
-              binding.path.scope.getBinding(node.init.name)
-            )
-          }
-          return binding
-        }
 
         // Traverse once again for useStaticQuery instances
         path.traverse({

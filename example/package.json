@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "@prismicio/gatsby-source-graphql-universal": "^3.4.5",
     "gatsby": "^2.0.76",
     "gatsby-image": "^2.0.20",
     "gatsby-plugin-manifest": "^2.0.9",
@@ -13,7 +14,6 @@
     "gatsby-plugin-sharp": "^2.0.14",
     "gatsby-plugin-typescript": "^2.0.3",
     "gatsby-source-filesystem": "^2.0.8",
-    "gatsby-source-graphql-universal": "file:../packages/gatsby-source-graphql-universal",
     "gatsby-transformer-sharp": "^2.1.8",
     "graphql-tools": "5.0.0",
     "prop-types": "^15.6.2",
@@ -32,6 +32,7 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "start": "npm run develop",
+    "clean": "gatsby clean",
     "format": "prettier --write \"src/**/*.js\"",
     "copy-plugin": "cp -R ../*.js node_modules/gatsby-source-graphql-universal/.",
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""

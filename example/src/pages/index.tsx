@@ -2,7 +2,7 @@ import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import Layout from '../components/layout'
 import SEO from '../components/seo'
-import { withGraphql } from 'gatsby-source-graphql-universal';
+import { withGraphql } from '@prismicio/gatsby-source-graphql-universal';
 import { BestFilm } from '../components/best-film';
 
 export const planetFragment = graphql`

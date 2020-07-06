@@ -17,6 +17,8 @@
   ],
   "dependencies": {
     "apollo-boost": "^0.4.9",
+    "babel-loader": "^8.1.0",
+    "babel-preset-gatsby": "^0.5.1",
     "gatsby-source-graphql": "^2.5.2",
     "graphql-tag": "^2.10.0",
     "graphql-tools": "^6.0.12",

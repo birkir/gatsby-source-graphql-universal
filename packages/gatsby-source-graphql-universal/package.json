@@ -11,9 +11,10 @@
   },
   "main": "index.js",
   "files": [
+    "dist",
     "*.js",
     "index.d.ts",
-    "third-party/*.js"
+    "!./jest.config.js"
   ],
   "dependencies": {
     "apollo-boost": "^0.4.9",
@@ -49,10 +50,10 @@
   },
   "repository": "https://github.com/prismicio/gatsby-source-graphql-universal",
   "scripts": {
-    "build": "babel src --out-dir . --ignore **/__tests__",
+    "build": "babel src --out-dir dist --ignore **/__tests__",
     "prepare": "cross-env NODE_ENV=production npm run build",
-    "watch": "babel -w src --out-dir . --ignore **/__tests__",
-    "clean": "rm -rf ./*.js",
+    "watch": "babel -w src --out-dir dist --ignore **/__tests__",
+    "clean": "rm -rf ./dist/*.js",
     "test": "jest"
   }
 }

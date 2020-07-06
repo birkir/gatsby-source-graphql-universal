@@ -1,4 +1,4 @@
-const { sourceNodes } = require('./third-party/gatsby-node');
+const { sourceNodes } = require('gatsby-source-graphql/gatsby-node');
 const { getRootQuery } = require('./getRootQuery');
 
 exports.sourceNodes = sourceNodes;

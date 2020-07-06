@@ -2,7 +2,7 @@
 
 const {
   sourceNodes
-} = require('./third-party/gatsby-node');
+} = require('gatsby-source-graphql/gatsby-node');
 
 const {
   getRootQuery

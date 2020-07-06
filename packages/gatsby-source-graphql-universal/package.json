@@ -1,7 +1,7 @@
 {
   "name": "@prismicio/gatsby-source-graphql-universal",
   "description": "Gatsby plugin which adds a third-party GraphQL API to Gatsby GraphQL with client side execution",
-  "version": "3.4.7",
+  "version": "3.4.8",
   "author": "Birkir Gudjonsson <birkir.gudjonsson@gmail.com>",
   "contributors": [
     "Marc McIntosh <marc.mcintosh@prismic.io>"
@@ -14,7 +14,7 @@
     "dist",
     "*.js",
     "index.d.ts",
-    "!./jest.config.js"
+    "!jest.config.js"
   ],
   "dependencies": {
     "apollo-boost": "^0.4.9",

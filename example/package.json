@@ -6,6 +6,7 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "@prismicio/gatsby-source-graphql-universal": "^3.4.5",
+    "atob": "^2.1.2",
     "gatsby": "^2.0.76",
     "gatsby-image": "^2.0.20",
     "gatsby-plugin-manifest": "^2.0.9",
@@ -35,10 +36,16 @@
     "clean": "gatsby clean",
     "format": "prettier --write \"src/**/*.js\"",
     "copy-plugin": "cp -R ../*.js node_modules/gatsby-source-graphql-universal/.",
-    "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\""
+    "test": "yarn test:e2e:ci",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "start-server-and-test develop http://localhost:8000 cy:open",
+    "test:e2e:ci": "start-server-and-test develop http://localhost:8000 cy:run"
   },
   "devDependencies": {
-    "prettier": "^1.15.2"
+    "cypress": "^4.10.0",
+    "prettier": "^1.15.2",
+    "start-server-and-test": "^1.11.1"
   },
   "repository": {
     "type": "git",

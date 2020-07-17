@@ -7345,10 +7345,10 @@ gatsby-source-filesystem@^2.0.8:
     valid-url "^1.0.9"
     xstate "^4.11.0"
 
-gatsby-source-graphql@^2.5.2:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/gatsby-source-graphql/-/gatsby-source-graphql-2.6.1.tgz#947c9de00a55f525df0c0f16166645cb9b614441"
-  integrity sha512-OvxyXODzwD92VWWRAeFzDNxRnIfQ4pm2KVU5ZRCqGD119KfqVPUX7Roo3E9ANnYnd5CpDmDFVecifl6rGjN8cg==
+gatsby-source-graphql@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/gatsby-source-graphql/-/gatsby-source-graphql-2.6.2.tgz#2ea97ec19ca92305d69439cab35d152d00a0aa97"
+  integrity sha512-FLTIhLWp/+mKodeYFsHL4K/2dHsOMRRpi3xK2d3UwRqq10fs/6cCr/6J/is+znkzqy5ceoPVaK3MFOzVPQRVmA==
   dependencies:
     "@babel/runtime" "^7.10.3"
     "@graphql-tools/links" v6.0.9
@@ -7974,7 +7974,7 @@ graphql-type-json@^0.3.2:
   resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
   integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==
 
-graphql@*, graphql@14.6.0, graphql@^14.6.0:
+graphql@*, graphql@^14.6.0:
   version "14.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.6.0.tgz#57822297111e874ea12f5cd4419616930cd83e49"
   integrity sha512-VKzfvHEKybTKjQVpTFrA5yUq2S9ihcZvfJAtsDBBCuV6wauPu1xl/f9ehgVf0FcEJJs4vz6ysb/ZMkGigQZseg==

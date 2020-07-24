@@ -7,7 +7,7 @@
   "dependencies": {
     "@prismicio/gatsby-source-graphql-universal": "^3.4.5",
     "atob": "^2.1.2",
-    "gatsby": "^2.0.76",
+    "gatsby": "^2.24.11",
     "gatsby-image": "^2.0.20",
     "gatsby-plugin-manifest": "^2.0.9",
     "gatsby-plugin-offline": "^2.0.16",
@@ -33,14 +33,16 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "start": "npm run develop",
+    "serve": "gatsby serve",
     "clean": "gatsby clean",
     "format": "prettier --write \"src/**/*.js\"",
     "copy-plugin": "cp -R ../*.js node_modules/gatsby-source-graphql-universal/.",
     "test": "yarn test:e2e:ci",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
+    "cy:run:prod": "cypress run -C ./cypress.prod.json",
     "test:e2e": "start-server-and-test develop http://localhost:8000 cy:open",
-    "test:e2e:ci": "start-server-and-test develop http://localhost:8000 cy:run && start-server-and-test build http://localhost:9000 cy:run"
+    "test:e2e:ci": "start-server-and-test develop http://localhost:8000 cy:run && npm run build && start-server-and-test serve http://localhost:9000 cy:run:prod"
   },
   "devDependencies": {
     "cypress": "^4.10.0",

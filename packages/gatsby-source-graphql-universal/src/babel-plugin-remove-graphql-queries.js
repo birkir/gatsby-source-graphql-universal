@@ -4,9 +4,6 @@ const nodePath = require(`path`)
 const murmurModule = require(`babel-plugin-remove-graphql-queries/murmur`)
 const murmurhash = typeof murmurModule === 'function' ? murmurModule : murmurModule.murmurhash
 
-const isGlobalIdentifier = tag =>
-  tag.isIdentifier({ name: `graphql` }) && tag.scope.hasGlobal(`graphql`)
-
 function getGraphqlExpr(t, queryHash, source) {
   return t.objectExpression([
     t.objectProperty(
@@ -60,6 +57,9 @@ class GraphQLSyntaxError extends Error {
     Error.captureStackTrace(this, GraphQLSyntaxError)
   }
 }
+
+const isGlobalIdentifier = tag =>
+  tag.isIdentifier({ name: `graphql` }) && tag.scope.hasGlobal(`graphql`)
 
 export function followVariableDeclarations(binding) {
   const node = binding.path?.node
@@ -215,7 +215,8 @@ export default function({ types: t }) {
         const nestedJSXVistor = {
           JSXIdentifier(path2) {
             if (
-              [`production`, `test`].includes(process.env.NODE_ENV) &&
+              (process.env.NODE_ENV === `test` ||
+                state.opts.stage === `build-html`) &&
               path2.isJSXIdentifier({ name: `StaticQuery` }) &&
               path2.referencesImport(`gatsby`) &&
               path2.parent.type !== `JSXClosingElement`
@@ -466,5 +467,6 @@ export {
   getGraphQLTag,
   StringInterpolationNotAllowedError,
   EmptyGraphQLTagError,
-  GraphQLSyntaxError
+  GraphQLSyntaxError,
+  murmurhash
 }

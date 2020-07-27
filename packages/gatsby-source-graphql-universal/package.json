@@ -45,7 +45,7 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "gatsby": "^2.22.11",
+    "gatsby": "^2.24.11",
     "graphql": "^14.6.0"
   },
   "repository": "https://github.com/prismicio/gatsby-source-graphql-universal",

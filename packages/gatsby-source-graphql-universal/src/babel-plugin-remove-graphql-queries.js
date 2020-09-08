@@ -2,7 +2,7 @@
 const graphql = require(`gatsby/graphql`)
 const nodePath = require(`path`)
 const murmurModule = require(`babel-plugin-remove-graphql-queries/murmur`)
-const getGraphqlExpr = require('./etGraphqlExpr')
+const getGraphqlExpr = require('./getGraphqlExpr')
 const murmurhash = typeof murmurModule === 'function' ? murmurModule : murmurModule.murmurhash
 
 class StringInterpolationNotAllowedError extends Error {
@@ -413,7 +413,7 @@ export default function ({ types: t }) {
         // Run it again to remove non-staticquery versions
         path.traverse({
           TaggedTemplateExpression(path2, state) {
-            const { ast, hash, isGlobal } = getGraphQLTag(path2)
+            const { ast, hash, text, isGlobal } = getGraphQLTag(path2)
 
             if (!ast) return null
 

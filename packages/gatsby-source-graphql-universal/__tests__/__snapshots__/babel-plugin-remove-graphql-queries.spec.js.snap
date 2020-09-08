@@ -5,6 +5,15 @@ exports[`Allow alternative import of useStaticQuery 1`] = `
 import * as React from 'react';
 import * as Gatsby from 'gatsby';
 export default (() => {
+  const query = {
+    id: \\"426988268\\",
+    source: \\"{site{siteMetadata{title}}}\\",
+
+    toString() {
+      return this.id;
+    }
+
+  };
   const siteTitle = staticQueryData.data;
   return /*#__PURE__*/React.createElement(\\"h1\\", null, siteTitle.site.siteMetadata.title);
 });"
@@ -130,7 +139,16 @@ import * as React from 'react';
 export default (() => {
   const data = staticQueryData.data;
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(\\"h1\\", null, data.site.siteMetadata.title), /*#__PURE__*/React.createElement(\\"p\\", null, data.site.siteMetadata.description));
-});"
+});
+export const query = {
+  id: \\"426988268\\",
+  source: \\"{site{siteMetadata{title}}}\\",
+
+  toString() {
+    return this.id;
+  }
+
+};"
 `;
 
 exports[`Transforms only the call expression in useStaticQuery 1`] = `
@@ -151,6 +169,15 @@ exports[`Transforms queries and preserves destructuring in useStaticQuery 1`] = 
 "import staticQueryData from \\"public/static/d/426988268.json\\";
 import * as React from 'react';
 export default (() => {
+  const query = {
+    id: \\"426988268\\",
+    source: \\"{site{siteMetadata{title}}}\\",
+
+    toString() {
+      return this.id;
+    }
+
+  };
   const {
     site
   } = staticQueryData.data;
@@ -162,6 +189,15 @@ exports[`Transforms queries and preserves variable type in useStaticQuery 1`] = 
 "import staticQueryData from \\"public/static/d/426988268.json\\";
 import * as React from 'react';
 export default (() => {
+  const query = {
+    id: \\"426988268\\",
+    source: \\"{site{siteMetadata{title}}}\\",
+
+    toString() {
+      return this.id;
+    }
+
+  };
   let {
     site
   } = staticQueryData.data;
@@ -193,6 +229,15 @@ exports[`Transforms queries defined in own variable in useStaticQuery 1`] = `
 "import staticQueryData from \\"public/static/d/426988268.json\\";
 import * as React from 'react';
 export default (() => {
+  const query = {
+    id: \\"426988268\\",
+    source: \\"{site{siteMetadata{title}}}\\",
+
+    toString() {
+      return this.id;
+    }
+
+  };
   const siteTitle = staticQueryData.data;
   return /*#__PURE__*/React.createElement(\\"h1\\", null, siteTitle.site.siteMetadata.title);
 });"

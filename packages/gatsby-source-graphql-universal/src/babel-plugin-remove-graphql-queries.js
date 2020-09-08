@@ -428,7 +428,7 @@ export default function ({ types: t }) {
 
             // Replace the query with the hash of the query.
             // path2.replaceWith(t.StringLiteral(queryHash))
-            templatePath.replaceWith(getGraphqlExpr(t, queryHash, text))
+            path2.replaceWith(getGraphqlExpr(t, queryHash, text))
             return null
           },
         })

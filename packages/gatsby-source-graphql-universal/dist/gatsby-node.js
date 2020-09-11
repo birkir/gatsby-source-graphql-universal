@@ -8,7 +8,16 @@ const {
   getRootQuery
 } = require('./getRootQuery');
 
-exports.sourceNodes = sourceNodes;
+exports.sourceNodes = ({
+  actions,
+  ...rest
+}, options) => sourceNodes({ ...rest,
+  actions: { ...actions,
+    createNode: (node, opts = {}) => actions.createNode(node, { ...opts,
+      name: '@prismicio/gatsby-source-graphql-universal'
+    })
+  }
+}, options);
 
 exports.onCreatePage = ({
   page,

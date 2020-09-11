@@ -4,7 +4,7 @@ exports.__esModule = true;
 exports.followVariableDeclarations = followVariableDeclarations;
 exports.default = _default;
 exports.getGraphQLTag = getGraphQLTag;
-exports.GraphQLSyntaxError = exports.EmptyGraphQLTagError = exports.StringInterpolationNotAllowedError = void 0;
+exports.murmurhash = exports.GraphQLSyntaxError = exports.EmptyGraphQLTagError = exports.StringInterpolationNotAllowedError = void 0;
 
 /*  eslint-disable new-cap */
 const graphql = require(`gatsby/graphql`);
@@ -13,15 +13,10 @@ const nodePath = require(`path`);
 
 const murmurModule = require(`babel-plugin-remove-graphql-queries/murmur`);
 
+const getGraphqlExpr = require('./getGraphqlExpr');
+
 const murmurhash = typeof murmurModule === 'function' ? murmurModule : murmurModule.murmurhash;
-
-const isGlobalIdentifier = tag => tag.isIdentifier({
-  name: `graphql`
-}) && tag.scope.hasGlobal(`graphql`);
-
-function getGraphqlExpr(t, queryHash, source) {
-  return t.objectExpression([t.objectProperty(t.identifier('id'), t.stringLiteral(queryHash)), t.objectProperty(t.identifier('source'), t.stringLiteral(source)), t.objectMethod('method', t.identifier('toString'), [], t.blockStatement([t.returnStatement(t.memberExpression(t.identifier('this'), t.identifier('id')))]))]);
-}
+exports.murmurhash = murmurhash;
 
 class StringInterpolationNotAllowedError extends Error {
   constructor(interpolationStart, interpolationEnd) {
@@ -59,12 +54,16 @@ class GraphQLSyntaxError extends Error {
 
 exports.GraphQLSyntaxError = GraphQLSyntaxError;
 
+const isGlobalIdentifier = (tag, tagName = `graphql`) => tag.isIdentifier({
+  name: tagName
+}) && tag.scope.hasGlobal(tagName);
+
 function followVariableDeclarations(binding) {
-  var _binding$path;
+  var _binding$path, _node$init;
 
   const node = (_binding$path = binding.path) === null || _binding$path === void 0 ? void 0 : _binding$path.node;
 
-  if (node && node.type === `VariableDeclarator` && node.id.type === `Identifier` && node.init.type === `Identifier`) {
+  if ((node === null || node === void 0 ? void 0 : node.type) === `VariableDeclarator` && (node === null || node === void 0 ? void 0 : node.id.type) === `Identifier` && (node === null || node === void 0 ? void 0 : (_node$init = node.init) === null || _node$init === void 0 ? void 0 : _node$init.type) === `Identifier`) {
     return followVariableDeclarations(binding.path.scope.getBinding(node.init.name));
   }
 
@@ -94,18 +93,18 @@ function getTagImport(tag) {
   return null;
 }
 
-function isGraphqlTag(tag) {
+function isGraphqlTag(tag, tagName = `graphql`) {
   const isExpression = tag.isMemberExpression();
   const identifier = isExpression ? tag.get(`object`) : tag;
   const importPath = getTagImport(identifier);
-  if (!importPath) return isGlobalIdentifier(tag);
+  if (!importPath) return isGlobalIdentifier(tag, tagName);
 
   if (isExpression && (importPath.isImportNamespaceSpecifier() || importPath.isIdentifier())) {
-    return tag.get(`property`).node.name === `graphql`;
+    return tag.get(`property`).node.name === tagName;
   }
 
-  if (importPath.isImportSpecifier()) return importPath.node.imported.name === `graphql`;
-  if (importPath.isObjectProperty()) return importPath.get(`key`).node.name === `graphql`;
+  if (importPath.isImportSpecifier()) return importPath.node.imported.name === tagName;
+  if (importPath.isObjectProperty()) return importPath.get(`key`).node.name === tagName;
   return false;
 }
 
@@ -140,10 +139,10 @@ function removeImport(tag) {
   }
 }
 
-function getGraphQLTag(path) {
+function getGraphQLTag(path, tagName = `graphql`) {
   const tag = path.get(`tag`);
-  const isGlobal = isGlobalIdentifier(tag);
-  if (!isGlobal && !isGraphqlTag(tag)) return {};
+  const isGlobal = isGlobalIdentifier(tag, tagName);
+  if (!isGlobal && !isGraphqlTag(tag, tagName)) return {};
   const quasis = path.node.quasi.quasis;
 
   if (quasis.length !== 1) {
@@ -184,12 +183,13 @@ function _default({
       Program(path, state) {
         const nestedJSXVistor = {
           JSXIdentifier(path2) {
-            if ([`production`, `test`].includes(process.env.NODE_ENV) && path2.isJSXIdentifier({
+            if ((process.env.NODE_ENV === `test` || state.opts.stage === `build-html`) && path2.isJSXIdentifier({
               name: `StaticQuery`
             }) && path2.referencesImport(`gatsby`) && path2.parent.type !== `JSXClosingElement`) {
               const identifier = t.identifier(`staticQueryData`);
               const filename = state.file.opts.filename;
-              const shortResultPath = `public/static/d/${this.queryHash}.json`;
+              const staticQueryDir = state.opts.staticQueryDir || `static/d`;
+              const shortResultPath = `public/${staticQueryDir}/${this.queryHash}.json`;
               const resultPath = nodePath.join(process.cwd(), shortResultPath); // Add query
 
               path2.parent.attributes.push(t.jSXAttribute(t.jSXIdentifier(`data`), t.jSXExpressionContainer(identifier))); // Add import
@@ -203,22 +203,18 @@ function _default({
         };
         const nestedHookVisitor = {
           CallExpression(path2) {
-            if ([`production`, `test`].includes(process.env.NODE_ENV) && isUseStaticQuery(path2)) {
+            if ((process.env.NODE_ENV === `test` || state.opts.stage === `build-html`) && isUseStaticQuery(path2)) {
               const identifier = t.identifier(`staticQueryData`);
               const filename = state.file.opts.filename;
-              const shortResultPath = `public/static/d/${this.queryHash}.json`;
-              const resultPath = nodePath.join(process.cwd(), shortResultPath); // Remove query variable since it is useless now
-
-              if (this.templatePath.parentPath.isVariableDeclarator()) {
-                this.templatePath.parentPath.remove();
-              } // only remove the import if its like:
+              const staticQueryDir = state.opts.staticQueryDir || `static/d`;
+              const shortResultPath = `public/${staticQueryDir}/${this.queryHash}.json`;
+              const resultPath = nodePath.join(process.cwd(), shortResultPath); // only remove the import if its like:
               // import { useStaticQuery } from 'gatsby'
               // but not if its like:
               // import * as Gatsby from 'gatsby'
               // because we know we can remove the useStaticQuery import,
               // but we don't know if other 'gatsby' exports are used, so we
               // cannot remove all 'gatsby' imports.
-
 
               if (path2.node.callee.type !== `MemberExpression`) {
                 // Remove imports to useStaticQuery
@@ -257,6 +253,7 @@ function _default({
             // wouldn't be handled properly
             tagsToRemoveImportsFrom.add(tag);
           } // Replace the query with the hash of the query.
+          // templatePath.replaceWith(t.StringLiteral(queryHash))
 
 
           templatePath.replaceWith(getGraphqlExpr(t, queryHash, text)); // traverse upwards until we find top-level JSXOpeningElement or Program
@@ -375,6 +372,7 @@ function _default({
               // wouldn't be handled properly
               tagsToRemoveImportsFrom.add(tag);
             } // Replace the query with the hash of the query.
+            // path2.replaceWith(t.StringLiteral(queryHash))
 
 
             path2.replaceWith(getGraphqlExpr(t, queryHash, text));

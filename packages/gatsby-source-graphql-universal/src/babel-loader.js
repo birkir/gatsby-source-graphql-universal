@@ -21,20 +21,21 @@ const { prepareOptions } = require(`./utils`);
  *
  * You can find documentation for the custom loader here: https://babeljs.io/docs/en/next/babel-core.html#loadpartialconfig
  */
-module.exports = babelLoader.custom(babel => {
+module.exports = babelLoader.custom((babel) => {
   const toReturn = {
     // Passed the loader options.
-    customOptions({ stage = `test`, ...options }) {
+    customOptions({ stage = `test`, reactRuntime = `classic`, ...options }) {
       return {
         custom: {
           stage,
+          reactRuntime
         },
         loader: {
           cacheDirectory: true,
           sourceType: `unambiguous`,
           ...getCustomOptions(stage),
-          ...options,
         },
+        ...options
       }
     },
 

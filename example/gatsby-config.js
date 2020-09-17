@@ -7,7 +7,7 @@ module.exports = {
   plugins: [
     `gatsby-plugin-typescript`,
     {
-      resolve: "gatsby-source-graphql-universal",
+      resolve: "@prismicio/gatsby-source-graphql-universal",
       options: {
         typeName: "SWAPI",
         fieldName: "swapi",

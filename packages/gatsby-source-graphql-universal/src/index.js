@@ -78,7 +78,9 @@ export const getIsolatedQuery = (querySource, fieldName, typeName) => {
   traverse(updatedQuery).forEach(function (x) {
     if (this.isLeaf && this.parent && this.parent.key === 'name') {
       if (this.parent.parent && this.parent.parent.node.kind === 'NamedType') {
-        if (typeof x === 'string' && x.indexOf(`${typeName}_`) === 0) {
+        if (typeof x === 'string' && x === typeName) {
+          this.update('Query');          
+        } else if (typeof x === 'string' && x.indexOf(`${typeName}_`) === 0) {
           this.update(x.substr(typeName.length + 1));
         }
       }
